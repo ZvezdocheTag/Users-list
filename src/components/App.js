@@ -1,69 +1,58 @@
 import React, { Component } from 'react';
 import '../App.css';
 import { connect } from 'react-redux'
-import { addUser } from '../reducers'
 import {
   Link
 } from 'react-router-dom'
 import { withRouter } from 'react-router'
+import Form from './Form'
+import { clearStore, removeUser } from '../reducers'
 
 class App extends Component {
   constructor() {
     super();
 
-    this.handleSubmit = this.handleSubmit.bind(this)
+    
   }
 
-  handleSubmit(e) {
-    e.preventDefault()
-    let { dispatch } = this.props;
-    let { name, bdate, adress, phone } = this;
+  handleChangeUser() {
 
-    dispatch(addUser({
-      name: name.value, 
-      bdate: bdate.value, 
-      adress: adress.value, 
-      phone: phone.value
-    }))
+  }
 
+  handleRemoveUser(id, e) {
+    this.props.dispatch(removeUser(id))
+  }
+
+  handleClearUserStore() {
+    this.props.dispatch(clearStore())
   }
 
   render() {
     let { users } = this.props;
-
-    console.log(this, "STORE")
+    console.log(users)
     return (
       <div className="App">
-        <h1>SOME</h1>
-        <form action="" onSubmit={this.handleSubmit}>
-          <fieldset>
-            <label htmlFor=""></label>
-            <input type="text" ref={(name) => this.name = name}/>
-          </fieldset>
-          <fieldset>
-            <label htmlFor=""></label>
-            <input type="text" ref={(bdate) => this.bdate = bdate}/>
-          </fieldset>
-          <fieldset>
-            <label htmlFor=""></label>
-            <input type="text" ref={(adress) => this.adress = adress}/>
-          </fieldset>
-          <fieldset>
-            <label htmlFor=""></label>
-            <input type="text" ref={(phone) => this.phone = phone}/>
-          </fieldset>
-          <button type="submit">add item</button>
-        </form>
+        <h1 onClick={this.handleClearUserStore.bind(this)}>SOME</h1>
+        <Form prop={this.props}/>
         <ul>
             {
               users.map((item, i) => (
-                  <li key={i}>
+                item === null ? <li key={i}/> :
+                <li key={i}>
                     <Link 
                     to={`/${item.name}`}  
                     filter={item.name}
                     >
                       {item.name}
                     </Link>
+                  <div className="controls">
+                    <a href="#" 
+                    className="controls--remove" 
+                    onClick={this.handleRemoveUser.bind(this, item.id)}> - Cross - </a>
+                    <a href="" 
+                    className="controls--change" 
+                    onClick={this.handleChangeUser}> - change - </a>
+                  </div>
                   </li>
                 
               ))

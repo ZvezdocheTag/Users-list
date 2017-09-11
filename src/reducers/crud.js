@@ -1,8 +1,5 @@
 import { v4 } from 'node-uuid'
 
-
-const CLEAR_STORE_USER = "CLEAR_STORE_USER"
-
 const ADD_USER = "ADD_USER"
 const REMOVE_USER ="REMOVE_USER"
 const CHANGE_USER ="CHANGE_USER"
@@ -10,7 +7,7 @@ const CHANGE_USER ="CHANGE_USER"
 export const addUser = (data) => ({
     type: ADD_USER,
     id: v4(),
-    data: data
+    data
 })
 export const removeUser = (id) => ({
     type: REMOVE_USER,
@@ -20,10 +17,6 @@ export const changeUser = (id, data) => ({
     type: ADD_USER,
     id,
     data
-})
-
-export const clearStore = () => ({
-    type: CLEAR_STORE_USER,
 })
 
 const userInitialInfo = {
@@ -36,10 +29,7 @@ function userInfo(state = userInitialInfo, action) {
     switch(action.type) {
         case ADD_USER:
             return {...state,
-                 users: [...state.users, {
-                     ...action.data,
-                     id: action.id
-                 }]}
+                 users: [...state.users, action.user]}
         case REMOVE_USER:
             return {...state,
                  users: state.users.filter(item => item.id !== action.id)}
@@ -49,8 +39,6 @@ function userInfo(state = userInitialInfo, action) {
                     state.users.map(item => 
                         item.id === action.id ? action.data : item)
                 }
-        case CLEAR_STORE_USER:
-            return {...state, users: []}
         default:
             return state
     }
