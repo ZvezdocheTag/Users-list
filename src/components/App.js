@@ -38,17 +38,17 @@ class App extends Component {
             {
               users.map((item, i) => (
                 item === null ? <li key={i}/> :
-                <li key={i}>
-                    <Link 
-                    to={`/${item.name}`}  
-                    filter={item.name}
-                    >
-                      {item.name}
-                    </Link>
+                <li key={i} className="user">
+                <div className="user__name">{item.name}</div>
+                <div className="user__bdate">{item.bdate}</div>
+                <div className="user__adress">{item.adress}</div>
+                <div className="user__phone">{item.phone}</div>
+                      
+           
                   <div className="controls">
                     <a href="#" 
                     className="controls--remove" 
-                    onClick={this.handleRemoveUser.bind(this, item.id)}> - Cross - </a>
+                    onClick={this.handleRemoveUser.bind(this, item.id)}> - X - </a>
                     <a href="" 
                     className="controls--change" 
                     onClick={this.handleChangeUser}> - change - </a>
