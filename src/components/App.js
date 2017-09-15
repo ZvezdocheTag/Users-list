@@ -12,12 +12,21 @@ class App extends Component {
   constructor() {
     super();
 
-    
+    this.state = {
+      modalIsOpen: false
+    }
+
+    this.openModal = this.openModal.bind(this)
+    this.closeModal = this.closeModal.bind(this)
   }
 
-  handleChangeUser() {
+  openModal() {
+    this.setState({modalIsOpen: true});
+}
 
-  }
+closeModal() {
+    this.setState({modalIsOpen: false});
+}
 
   handleRemoveUser(id, e) {
     this.props.dispatch(removeUser(id))
@@ -33,25 +42,28 @@ class App extends Component {
     return (
       <div className="App">
         <h1 onClick={this.handleClearUserStore.bind(this)}>SOME</h1>
-        <Form prop={this.props}/>
+        <Form 
+        prop={this.props} 
+        openModal={this.openModal} 
+        closeModal={this.closeModal}
+        modalState={this.state.modalIsOpen}
+        />
         <ul>
             {
               users.map((item, i) => (
                 item === null ? <li key={i}/> :
                 <li key={i} className="user">
-                <div className="user__name">{item.name}</div>
-                <div className="user__bdate">{item.bdate}</div>
-                <div className="user__adress">{item.adress}</div>
-                <div className="user__phone">{item.phone}</div>
-                      
-           
+                    <div className="user__name">{item.name}</div>
+                    <div className="user__bdate">{item.bdate}</div>
+                    <div className="user__adress">{item.adress}</div>
+                    <div className="user__phone">{item.phone}</div>
                   <div className="controls">
                     <a href="#" 
                     className="controls--remove" 
                     onClick={this.handleRemoveUser.bind(this, item.id)}> - X - </a>
                     <a href="" 
                     className="controls--change" 
-                    onClick={this.handleChangeUser}> - change - </a>
+                    onClick={this.openModal}> - change - </a>
                   </div>
                   </li>
                 
