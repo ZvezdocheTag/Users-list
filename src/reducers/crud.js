@@ -13,10 +13,10 @@ export const removeUser = (id) => ({
     type: REMOVE_USER,
     id
 })
-export const changeUser = (id, data) => ({
-    type: ADD_USER,
-    id,
-    data
+export const changeUser = ({ id, data} ) => ({
+    type: CHANGE_USER,
+    data: data,
+    id: id
 })
 
 const userInitialInfo = {

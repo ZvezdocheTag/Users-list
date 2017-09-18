@@ -2,8 +2,14 @@ const VALIDATE_USER_NAME = "VALIDATE_USER_NAME"
 const VALIDATE_USER_PHONE = "VALIDATE_USER_PHONE"
 const VALIDATE_USER_ADRESS = "VALIDATE_USER_ADRESS"
 const VALIDATE_USER_BDATE = "VALIDATE_USER_BDATE"
+const SET_INVALIDATION_FIELD = "SET_INVALIDATION_FIELD"
 
-const validateUserName = (name) => ({
+export const setIvalidationField = (data) => ({
+    type: SET_INVALIDATION_FIELD,
+    data
+})
+
+export const validateUserName = (name) => ({
     type: VALIDATE_USER_NAME,
     name
 })
@@ -20,30 +26,24 @@ const validateUserBdate = (bdate) => ({
     bdate
 })
 
-function validateUserInfo(state = {}, action) {
+function validateUserInfo(state = {invalidFields: []}, action) {
     let error;
+
     switch(action.type) {
+        case SET_INVALIDATION_FIELD:
+            return {
+                ...state,
+                invalidFields: action.data
+            }
         case VALIDATE_USER_NAME:
             return {...state, user: {
                 ...state.user,
                 name: action.name
             }}
-        case VALIDATE_USER_PHONE:
-            return {...state, user: {
-                ...state.user,
-                phone: action.phone
-            }}
-        case VALIDATE_USER_ADRESS:
-            return {...state, user: {
-                ...state.user,
-                adress: action.adress
-            }}
-        case VALIDATE_USER_BDATE:
-            return {...state, user: {
-                ...state.user,
-                bdate: action.bdate
-            }}
+
         default:
             return state
     }
 }
+
+export default validateUserInfo;

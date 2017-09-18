@@ -1,5 +1,5 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
-import userInfo from './reducers'
+import userInfoCombiner from './reducers'
 import { loadState, saveState } from './localStorage'
 import throttle from 'lodash/throttle'
 
@@ -10,13 +10,21 @@ const addPromiseSupportToDispatch = (store) => (next) => (action) => {
     return next(action)
 }
 
+const thunk = (store) => (next) => (action) => 
+    typeof action === 'function' ? 
+        action(store.dispatch) : 
+        next(action)
+
+
 const addLogingToDispatch = (store) => {
 
     return (next) => {
         if(!console.group) {
             return next
         }
+        
         return (action) => {
+            console.log(store, action)
             console.group(action.type);
             console.log("prev state", store.getState());
             console.log("action", action)
@@ -45,7 +53,7 @@ const configureStore = () => {
 
 
     const store = createStore(
-        userInfo, persistanceState, applyMiddleware(...middlewares)
+        userInfoCombiner, persistanceState, applyMiddleware(...middlewares)
     );
     store.subscribe(throttle(
         () => {

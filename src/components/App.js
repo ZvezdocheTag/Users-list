@@ -6,12 +6,25 @@ import {
 } from 'react-router-dom'
 import { withRouter } from 'react-router'
 import Form from './Form'
-import { clearStore, removeUser } from '../reducers'
+import { clearStore, removeUser, changeUser, pickedUserId } from '../reducers'
+import UserCard from './UserCard'
+import Modal from 'react-modal'
+import UserForm from './UserForm'
+
+const customStyles = {
+    content : {
+      top                   : '50%',
+      left                  : '50%',
+      right                 : 'auto',
+      bottom                : 'auto',
+      marginRight           : '-50%',
+      transform             : 'translate(-50%, -50%)'
+    }
+  };
 
 class App extends Component {
   constructor() {
     super();
-
     this.state = {
       modalIsOpen: false
     }
@@ -20,7 +33,8 @@ class App extends Component {
     this.closeModal = this.closeModal.bind(this)
   }
 
-  openModal() {
+openModal(e) {
+    e.preventDefault()
     this.setState({modalIsOpen: true});
 }
 
@@ -28,48 +42,64 @@ closeModal() {
     this.setState({modalIsOpen: false});
 }
 
-  handleRemoveUser(id, e) {
-    this.props.dispatch(removeUser(id))
-  }
+handleRemoveUser(id, e) {
+  e.preventDefault()
+  this.props.dispatch(removeUser(id))
+}
 
-  handleClearUserStore() {
-    this.props.dispatch(clearStore())
-  }
+handleChangeUser(id, e) {
+  e.preventDefault()
+  this.props.dispatch(pickedUserId(id))
+  this.setState({
+    modalIsOpen: true
+  })
+}
+
+handleClearUserStore() {
+  this.props.dispatch(clearStore())
+}
 
   render() {
-    let { users } = this.props;
-    console.log(users)
+    let { users, dispatch, pickedUserId } = this.props;
+
     return (
       <div className="App">
-        <h1 onClick={this.handleClearUserStore.bind(this)}>SOME</h1>
+        {/* <button onClick={this.handleClearUserStore.bind(this)}>sssssss</button> */}
         <Form 
-        prop={this.props} 
-        openModal={this.openModal} 
-        closeModal={this.closeModal}
-        modalState={this.state.modalIsOpen}
+          prop={this.props} 
         />
-        <ul>
-            {
+        <ul className="users-list">
+            {typeof users !== "undefined" ? 
               users.map((item, i) => (
                 item === null ? <li key={i}/> :
-                <li key={i} className="user">
-                    <div className="user__name">{item.name}</div>
-                    <div className="user__bdate">{item.bdate}</div>
-                    <div className="user__adress">{item.adress}</div>
-                    <div className="user__phone">{item.phone}</div>
-                  <div className="controls">
-                    <a href="#" 
-                    className="controls--remove" 
-                    onClick={this.handleRemoveUser.bind(this, item.id)}> - X - </a>
-                    <a href="" 
-                    className="controls--change" 
-                    onClick={this.openModal}> - change - </a>
-                  </div>
-                  </li>
-                
-              ))
+                <UserCard 
+                handleRemoveUser={this.handleRemoveUser.bind(this, item.id)}
+                handleChangeUser={this.handleChangeUser.bind(this, item.id)}
+                item={item}
+                key={item.id}
+                />
+              )) :
+              <li />
             }
         </ul>
+        <Modal
+                overlayClassName={{
+                    base: 'body-overlay',
+                    afterOpen: 'body-overlay--after-open',
+                    beforeClose: 'body-overlay--before-close'
+                }}
+                isOpen={this.state.modalIsOpen}
+                onRequestClose={this.closeModal}
+                style={customStyles}
+                contentLabel="Example Modal"
+            >
+            <button onClick={this.closeModal}>close</button>
+                <UserForm 
+                dispatch={dispatch} 
+                methodToDispatch={changeUser}
+                userId={pickedUserId}
+                />
+            </Modal>
       </div>
     );
   }
@@ -77,7 +107,8 @@ closeModal() {
 
 const mapStateToProps = state => {
   return {
-    users: state.users
+    ...state.userInfo,
+    ...state.validateUserInfo
   }
 }
 

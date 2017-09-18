@@ -1,5 +1,9 @@
 .App {
-  text-align: center;
+  display: flex;
+
+}
+.App > * {
+  width: 50%;
 }
 
 .App-logo {
@@ -14,10 +18,69 @@
   color: white;
 }
 
+
+.users-list {
+  list-style: none;
+}
+.user {
+  padding: 0 150px 0 10px;
+  position: relative;
+  margin-bottom: 20px;
+}
+.invalid {
+  border: 1px solid tomato;
+}
+.controls {
+  position: absolute;
+  top: 0;
+  left: calc( 100% - 150px);
+  width: 50px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.controls > * {
+  flex: 1;
+  display: block;
+  text-align: center;
+  vertical-align: middle;
+}
+.user > * {
+  margin-bottom: 5px;
+}
+.user__label {
+  font-size: 13px;
+  display: inline-block;
+  margin-right: 5px;
+  color: grey;
+}
 .App-intro {
   font-size: large;
 }
 
+
+.user-form {
+  padding: 20px;
+}
+.user-form fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 10px;
+
+}
+.user-form label {
+  margin-bottom: 5px;
+  display: block;
+}
+.user-form input {
+  height: 35px;
+  line-height: 35px;
+}
+.user-form input,
+.user-form label {
+  width: 100%;
+}
 .body-overlay {
   position: fixed;
   top: 0px;
